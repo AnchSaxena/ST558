@@ -1,0 +1,93 @@
+---
+title: "Project 2"
+author: "Anchal Saxena"
+date: "6/23/2019"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE, cache = TRUE)
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+library(readr)
+library(ggplot2)
+library(titanic)
+library(DT)
+library(caret)
+library(rgl)
+library(ggiraphExtra)
+library(XML)
+library(ZillowR)
+library(plyr)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+zData <- GetDeepSearchResults(address = '14707 W SUNNY DR', citystatezip = "Los Angeles, CA",
+zws_id = "X1-ZWz17t7khyoxe3_8e096")
+
+df <- list()
+
+subData <- xmlToList(zData$response[["results"]])
+ 
+x <- unlist(zData$response[["results"]])
+print(x)
+
+addr <- unlist(subData[[3]])
+addr
+
+df$street <- addr[1]
+df$zipCode <-addr[2]
+df$city <- addr[3]
+df$useCode <- subData[[5]]
+df$taxYear <- subData[[6]]
+df$taxValue <- subData[[7]]
+df$yearBuilt <- subData[[8]]
+df$lotSize <- subData[[9]]
+df$finishedSqFt <- subData[[10]]
+df$bath <- subData[[11]]
+df$bed <- subData[[12]]
+df$zestimate <- unlist(subData[[15]])[[1]]
+df$regionName <- unlist(subData[[16]])[[1]]
+df$regionType <- unlist(subData[[16]])[[2]]
+
+df2 <- as.data.frame(df)
+
+
+getNA <- function(x, variable) {
+  ifelse(variable %in% unlist(dimnames(x)), x["text",variable][[1]], NA)
+}
+
+out <- apply(results, MAR=2, function(property) {
+  zpid <- property$zpid
+  links <- unlist(property$links)
+  address <- unlist(property$address)
+  z <- property$zestimate
+  zestdf <- list(
+    amount=ifelse("text" %in% names(z$amount), z$amount$text, NA),
+    lastupdated=z$"last-updated",
+    valueChange=ifelse(length(z$valueChange)==0, NA, z$valueChange),
+    valueLow=getValRange(z$valuationRange, "low"),
+    valueHigh=getValRange(z$valuationRange, "high"),
+    percentile=z$percentile)
+  li
+
+subData
+
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
